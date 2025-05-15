@@ -1,0 +1,42 @@
+digraph "고도화된 AI 스타트업 비교 평가 시스템 (Supervisor 패턴 적용)" {
+	comment="고도화된 AI 스타트업 비교 평가 시스템 (Supervisor 패턴 적용)"
+	graph [fontname=NanumGothic fontsize=12 rankdir=TD]
+	node [fontname=NanumGothic fontsize=10]
+	edge [fontname=NanumGothic fontsize=9]
+	UserInput [label="입력:\n- 비교 대상 스타트업 목록 (최소 2개)\n- (선택적) 사용자 정의 평가 가중치" fillcolor=lightgray fontname=NanumGothic fontsize=10 shape=parallelogram style="rounded,filled"]
+	Supervisor [label="Supervisor Agent\n(전체 워크플로우 조정, 태스크 분배, 결과 취합)" fillcolor=skyblue fontname=NanumGothic fontsize=10 shape=octagon style="rounded,filled"]
+	subgraph cluster_single_startup_evaluation_process {
+		graph [color=lightgrey fillcolor=transparent fontname=NanumGothic label="개별 스타트업 평가 프로세스 (각 스타트업에 반복 적용)" style=filled]
+		InfoScraper [label="InfoScraper Agent\n(기업 정보, 뉴스, 웹사이트 수집)\nTool: Web Search (Tavily), Web Scraper" fillcolor=lightblue fontname=NanumGothic fontsize=10 shape=box style="rounded,filled"]
+		subgraph cluster_expert_analysis_agents {
+			graph [color=dimgray fontname=NanumGothic label="전문 분석 에이전트 그룹 (상세 평가 기준 적용)" style=dotted]
+			node [fillcolor=lightcyan fontname=NanumGothic fontsize=9 shape=box style="rounded,filled"]
+			TechEvalAgent [label="TechEvaluation Agent\n(기술/제품 분석, 특허 등)\nTool: RAG, Patent Search"]
+			MarketEvalAgent [label="MarketEvaluation Agent\n(시장성, 경쟁 환경 분석)\nTool: RAG, Web Search"]
+			TeamEvalAgent [label="TeamEvaluation Agent\n(창업자/팀 역량 분석)\nTool: Web Search, RAG"]
+			BizModelEvalAgent [label="BizModelEvaluation Agent\n(사업모델, 실적, 투자조건 분석)\nTool: RAG, Web Search"]
+		}
+		InfoScraper -> TechEvalAgent
+		InfoScraper -> MarketEvalAgent
+		InfoScraper -> TeamEvalAgent
+		InfoScraper -> BizModelEvalAgent
+		IndividualReportAggregator [label="개별 스타트업 분석 결과 취합" shape=point width=0.1 height=0.1]
+		TechEvalAgent -> IndividualReportAggregator
+		MarketEvalAgent -> IndividualReportAggregator
+		TeamEvalAgent -> IndividualReportAggregator
+		BizModelEvalAgent -> IndividualReportAggregator
+	}
+	ComparativeAnalysis [label="ComparativeAnalysis Agent\n(다수 스타트업의 개별 분석 결과 종합,\n항목별 비교 분석 및 요약)" fillcolor=lightblue fontname=NanumGothic fontsize=10 shape=box style="rounded,filled"]
+	HumanReview [label="(선택적) HumanReview Node\n(중간 결과 검토/피드백 반영)" fillcolor=whitesmoke fontname=NanumGothic fontsize=10 shape=box style="rounded,filled,dashed"]
+	ReportGenerator [label="ReportGenerator Agent\n(최종 비교 평가 보고서 생성)" fillcolor=lightblue fontname=NanumGothic fontsize=10 shape=box style="rounded,filled"]
+	FinalReport [label="출력: 최종 비교 평가 보고서" fillcolor=lightgray fontname=NanumGothic fontsize=10 shape=parallelogram style="rounded,filled"]
+	UserInput -> Supervisor
+	Supervisor -> InfoScraper [label="각 스타트업 정보 수집 지시\n(병렬/순차적 멀티 실행)"]
+	IndividualReportAggregator -> Supervisor [label="개별 스타트업 분석 결과 보고"]
+	Supervisor -> ComparativeAnalysis [label="모든 개별 분석 결과 종합 전달"]
+	ComparativeAnalysis -> ReportGenerator [label="(Human Review 생략 시)"]
+	ReportGenerator -> FinalReport
+	ArchNote1 [label="아키텍처 보완점 1:\nSupervisor가 사용자 입력(평가 가중치 등)을\n받아 동적으로 평가 기준 조절 가능" fontname=NanumGothic fontsize=8 shape=plaintext]
+	ArchNote2 [label="아키텍처 보완점 2:\n모든 분석 결과에 정보 출처 및\nAI 추론 신뢰도 점수 포함" fontname=NanumGothic fontsize=8 shape=plaintext]
+	ArchNote3 [label="아키텍처 보완점 3:\nHumanReviewNode를 통한\n중간 검토 및 피드백 반영 기능 확장" fontname=NanumGothic fontsize=8 shape=plaintext]
+}
