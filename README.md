@@ -61,7 +61,7 @@
 -   **`ComparativeAnalysisAgent` (`agents/comparative_analysis_agent.py`)**: 다수 스타트업의 개별 분석 결과를 종합하여 항목별 비교 분석 및 요약 결과를 생성합니다.
 -   **`ReportGeneratorAgent` (`agents/report_generator_agent.py`)**: 모든 분석 결과를 바탕으로 정의된 템플릿(`prompts/ai_mini_design_20_3반_배민하_prompt.md`)에 맞춰 최종 비교 평가 보고서를 생성합니다.
 
-## State (`states/ai_mini_design_20_3반_배민하_state_py.py`)
+## State 
 
 -   **`startup_names_to_compare`** (`List[str]`): 사용자가 입력한 비교 분석 대상 스타트업 이름 목록.
 -   **`user_defined_criteria_weights`** (`Optional[Dict[str, float]]`): (선택적) 사용자가 정의한 평가 기준별 가중치.
@@ -75,7 +75,7 @@
 
 ## Architecture
 
-(시스템 아키텍처 다이어그램은 `1일차/ai_mini_design_20_3반_배민하_graph.png` 이미지 파일 또는 `1일차/ai_mini_design_20_3반_배민하_graph.gv` DOT 코드를 통해 확인할 수 있습니다. LangGraph의 `app.get_graph().print_ascii()`를 통해서도 텍스트 기반 시각화가 가능합니다.)
+(시스템 아키텍처 다이어그램은 `1일차/ai_mini_design_20_3반_배민하_graph.png` 이미지 파일 또는 `1일차/ai_mini_design_20_3반_배민하_graph.gv` DOT 코드를 통해 확인할 수 있습니다.)
 
 ## Directory Structure
 AI-Service-Mini-Project/
