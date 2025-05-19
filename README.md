@@ -1,54 +1,98 @@
-# AI-Service-Mini-Project
+# AI 스타트업 비교 평가 시스템 (Startup Evaluator v1.4)
 
-# AI 스타트업 비교 평가 시스템 설계 (Day 1 산출물)
+본 프로젝트는 AI 스타트업에 대한 심층적이고 객관적인 비교 분석 정보를 제공하여, 투자자 및 이해관계자의 의사결정을 지원하는 "Startup Evaluator v1.4" 에이전트를 설계하고 구현한 실습 프로젝트입니다.
 
-**과정명:** AI Service Mini Project
-**소속:** 3반  
-**이름:** 배민하  
-**주제 번호:** 20번 (AI 스타트업 평가)  
-**제출일:** 2025-05-15
+## Overview
 
-## 1. 프로젝트 개요
+-   **Objective**: 사용자가 지정한 복수의 AI 스타트업에 대해 웹 정보 수집, RAG를 통한 문서 참조, 평가 항목별 전문 에이전트 분석을 수행하여, 개별 분석 결과, 비교 분석 결과, 그리고 종합 보고서를 생성함으로써 투자 의사결정을 지원합니다.
+-   **Methods**: LangGraph 기반 멀티 에이전트 시스템 (Supervisor 패턴 적용), RAG (Retrieval Augmented Generation), 웹 스크래핑 (Tavily API 활용), LLM 기반 상세 항목 분석 및 보고서 생성.
+-   **Tools**: Python, LangGraph, LangChain, OpenAI GPT-4o-mini, Tavily Search API, FAISS (벡터 스토어), PyPDFLoader.
 
-본 프로젝트는 "AI 스타트업 투자 평가 에이전트 개발" (기존 설계)을 기반으로, 미니 프로젝트 요구사항에 맞춰 기능을 "고도화"하는 것을 목표로 합니다. LangGraph 프레임워크를 활용한 멀티 에이전트 시스템(Supervisor 패턴 적용)을 구상하여, 최소 2개 이상의 AI 스타트업에 대한 투자 매력도를 심층적으로 비교 분석하고, 그 결과를 종합적인 보고서 형태로 제공하는 AI 서비스를 설계했습니다.
+## Features
 
-**주요 고도화 방향:**
+-   **다중 스타트업 동시 비교 분석**: 최소 2개 이상의 스타트업을 입력받아 투자 매력도를 병렬적으로 심층 비교 분석합니다.
+-   **자동화된 정보 수집 및 상세 분석**: 웹 및 제공된 PDF 문서(`Artificial General Intelligence, Intelligent Agents, Voice Intelligence.pdf`)에서 정보를 자동 수집하고, 기술, 시장, 팀, 사업 모델 등 다각적인 기준으로 상세 평가합니다.
+-   **신뢰도 기반 리포팅 및 맞춤형 보고서 생성**: 각 분석 항목에 대한 AI의 분석 신뢰도 점수를 제공하며, 최종적으로 사용자 정의된 프롬프트 템플릿에 따라 종합적인 Markdown 보고서를 생성합니다.
+-   **동적 평가 기준 적용 가능성**: 사용자가 평가 기준의 가중치를 조절할 수 있는 아키텍처적 유연성을 고려합니다. (구현됨: `main.py`의 `user_defined_criteria_weights`를 통해 `DEFAULT_CRITERIA_WEIGHTS` 오버라이드 가능)
 
-* **다중 스타트업 비교 분석 기능:** 기존의 단일 스타트업 순차 평가 방식에서 벗어나, 여러 스타트업을 동시에 입력받아 병렬 분석 후 그 결과를 심층 비교하는 아키텍처로 확장했습니다.
-* **투자 평가 기준의 상세화 및 동적 적용:** "기존 설계 PDF"의 6가지 주요 평가 기준(창업자, 시장성, 제품/기술력, 경쟁 우위, 실적, 투자조건)을 더욱 구체적인 하위 항목으로 상세화하고, AI가 이를 어떻게 평가할지 정의했습니다. 또한, 사용자가 평가 기준의 가중치를 조절할 수 있는 동적 적용 가능성을 아키텍처에 반영했습니다.
-* **보고서의 질적 향상:** 최종 보고서에 스타트업 간 구체적인 비교 분석 내용, 각 분석 근거 데이터의 출처 및 AI 추론 신뢰도(향후 확장 고려)를 명시하여 보고서의 깊이와 신뢰도를 증진시키는 방향으로 설계했습니다.
-* **아키텍처 보완:** Supervisor 패턴을 도입하여 전체 워크플로우를 효과적으로 조정하고, 각 전문 분석 에이전트의 역할과 사용 도구를 명확히 했으며, 사용자 피드백 루프와 같은 확장 가능성을 고려했습니다.
+## 주요 아키텍처 개선 및 고도화 포인트
 
-## 2. 설계 산출물 안내
+본 시스템은 기존 단일 스타트업 순차 평가 방식에서 발전하여 다음과 같은 주요 고도화 및 아키텍처 개선 사항을 포함합니다:
 
-본 압축 파일에는 다음과 같은 Day 1 설계 산출물이 포함되어 있습니다.
+1.  **다중 스타트업 비교 분석 기능 확장**:
+    * 여러 스타트업 정보를 동시에 입력받아, 각 스타트업에 대한 개별 분석 후 그 결과를 심층적으로 비교하는 아키텍처를 채택했습니다.
+    * `Supervisor` 역할을 하는 로직(StateGraph의 흐름 제어)을 통해 개별 스타트업 분석 루프를 관리하고, 모든 분석이 완료되면 비교 분석 단계로 전환합니다.
 
-* **`ai_mini_design_20_3반_배민하_graph.gv`**: Graphviz DOT 언어로 작성된 시스템 아키텍처 다이어그램의 소스 코드입니다.
-* **`ai_mini_design_20_3반_배민하_graph.png`**: 위 `.gv` 코드를 렌더링한 시스템 아키텍처 이미지입니다. (제출 가이드의 "화면 캡처 형태"에 해당)
-* **`ai_mini_design_20_3반_배민하_state.py`**: LangGraph 워크플로우에서 사용될 주요 상태(State)들을 Python의 `TypedDict`로 정의한 코드 파일입니다.
-* **`ai_mini_design_20_3반_배민하_template.md`**: 최종 생성될 비교 평가 보고서의 상세 구조 및 목차를 정의한 마크다운 파일입니다.
-* **`ai_mini_design_20_3반_배민하_prompt.md`**: `ReportGeneratorAgent`가 최종 보고서를 생성하기 위해 사용할 상세 프롬프트를 담은 마크다운 파일입니다.
+2.  **투자 평가 기준의 상세화 및 동적 가중치 적용**:
+    * 기존 평가 기준(창업자, 시장성, 제품/기술력, 경쟁 우위, 실적, 투자조건)을 구체적인 하위 항목으로 상세화하여 각 전문 분석 에이전트가 평가하도록 설계했습니다.
+    * 사용자가 평가 기준의 가중치를 동적으로 조절할 수 있는 기능을 상태(`AdvancedStartupEvaluationState`의 `user_defined_criteria_weights`)에 반영하여, `main.py`의 `calculate_weighted_score` 함수에서 사용자 정의 가중치 또는 기본 가중치를 사용해 종합 점수를 계산합니다.
 
-## 3. 시스템 아키텍처 간략 설명 (Graph Diagram 참조)
+3.  **보고서의 질적 향상 및 분석 신뢰도 명시**:
+    * 최종 보고서에 스타트업 간 구체적인 비교 분석 내용, 각 분석 근거 데이터의 출처(`SourceInfo` 활용)를 포함합니다.
+    * 각 개별 분석 항목(기술, 시장, 팀, 사업모델)의 결과(`TechEvaluationOutput` 등)에는 `evaluation_confidence_score`를 명시하여 AI 분석의 신뢰도를 제공합니다. 이는 보고서 생성 시 활용됩니다.
 
-* **입력:** 비교 분석할 최소 2개 이상의 스타트업 목록 및 (선택적으로) 사용자 정의 평가 가중치.
-* **Supervisor Agent:** 전체 워크플로우를 조정하고, 각 스타트업에 대한 정보 수집 및 분석 태스크를 하위 전문 에이전트들에게 분배합니다. 최종적으로 모든 분석 결과를 취합하여 보고서 생성을 지시합니다.
-* **개별 스타트업 평가 프로세스 (각 스타트업에 반복 적용, 병렬 수행 가능):**
-    * `InfoScraperAgent`: 웹 검색, 문서 분석 등의 도구를 사용하여 각 스타트업의 기본 정보, 기술 스택, 시장 자료, 뉴스 기사 등을 수집합니다.
-    * `전문 분석 에이전트 그룹`: 수집된 정보를 바탕으로 "상세 정의된 투자 평가 기준"에 따라 각 스타트업을 개별적으로 심층 분석합니다.
-        * `TechEvaluationAgent`: 기술/제품의 혁신성, 독창성, 구현 수준, 특허 등을 분석합니다. (Tool: RAG, Patent Search)
-        * `MarketEvaluationAgent`: 목표 시장의 규모 및 성장성, 경쟁 환경, 시장 내 포지셔닝 등을 분석합니다. (Tool: RAG, Web Search)
-        * `TeamEvaluationAgent`: 창업자 및 핵심 팀원의 전문성, 경험, 실행력 등을 분석합니다. (Tool: Web Search, RAG)
-        * `BizModelEvaluationAgent`: 수익 모델, 고객 확보 전략, 실적, 투자 조건 등을 분석합니다. (Tool: RAG, Web Search)
-    * `IndividualReportAggregator` (개념적): 각 전문 에이전트의 분석 결과를 취합하여 Supervisor에게 보고합니다.
-* **ComparativeAnalysisAgent:** Supervisor로부터 전달받은 다수 스타트업의 개별 분석 결과들을 종합하여, 정의된 평가 기준에 따라 항목별로 직접 비교 분석하고 요약 결과를 생성합니다.
-* **(선택적) HumanReviewNode:** 자동 생성된 중간 분석 결과에 대해 사용자가 검토하고 피드백을 반영할 수 있는 확장 지점입니다.
-* **ReportGeneratorAgent:** 개별 분석 결과와 비교 분석 결과를 바탕으로, 정의된 보고서 템플릿에 맞춰 최종 비교 평가 보고서를 생성합니다.
-* **출력:** 최종 비교 평가 보고서.
+4.  **Supervisor 패턴을 통한 워크플로우 조정**:
+    * LangGraph의 StateGraph를 활용하여 전체 워크플로우를 효과적으로 조정하고, `InfoScraperAgent`부터 `ReportGeneratorAgent`까지 각 전문 에이전트의 역할과 데이터 흐름을 명확히 했습니다.
+    * 조건부 엣지(`should_continue_processing`)를 통해 개별 스타트업 분석 완료 여부를 판단하고 다음 단계로의 전환을 자동화합니다.
 
-**아키텍처 보완점 (다이어그램 내 명시):**
-1.  Supervisor가 사용자 입력(평가 가중치 등)을 받아 동적으로 평가 기준 조절 가능.
-2.  모든 분석 결과에 정보 출처 및 (향후) AI 추론 신뢰도 점수 포함.
-3.  HumanReviewNode를 통한 중간 검토 및 피드백 반영 기능 확장.
+5.  **모듈화된 에이전트 및 도구 사용**:
+    * 정보 수집, 기술 분석, 시장 분석 등 각 기능을 독립적인 에이전트 모듈로 분리하여 개발 및 유지보수 용이성을 높였습니다.
+    * 웹 검색(Tavily), RAG(FAISS, PyPDF) 등 외부 도구를 효과적으로 통합하여 분석의 깊이와 범위를 확장했습니다.
 
----
+## Tech Stack
+
+| Category        | Details                                                                 |
+| :-------------- | :---------------------------------------------------------------------- |
+| Framework       | LangGraph, LangChain                                                    |
+| Language        | Python                                                                  |
+| LLM             | OpenAI GPT-4o-mini                                                      |
+| Retrieval       | FAISS (Vector Store for RAG), PyPDFLoader                               |
+| Web Search      | Tavily Search API                                                       |
+| Core Libraries  | Pydantic (State/Output definition), python-dotenv (Environment management) |
+
+## Agents
+
+-   **`SupervisorAgent` (Conceptual, implemented in `main.py`)**: 전체 워크플로우 조정, 태스크 분배, 결과 취합 및 다음 단계 결정 로직 수행.
+-   **`InfoScraperAgent` (`agents/info_scraper_agent.py`)**: 웹 검색(Tavily) 및 RAG(PDF 문서)를 통해 각 스타트업의 기본 정보를 수집합니다.
+-   **`TechEvaluationAgent` (`agents/tech_eval_agent.py`)**: 수집된 정보를 바탕으로 스타트업의 기술 및 제품(독창성, 구현 가능성, 특허 등)을 분석합니다.
+-   **`MarketEvaluationAgent` (`agents/market_eval_agent.py`)**: 목표 시장의 규모, 성장성, 경쟁 환경 등을 분석합니다.
+-   **`TeamEvaluationAgent` (`agents/team_eval_agent.py`)**: 창업자 및 핵심 팀원의 전문성, 경험, 실행력 등을 분석합니다.
+-   **`BizModelEvaluationAgent` (`agents/biz_model_eval_agent.py`)**: 수익 모델, 고객 확보 전략, 실적, 투자 조건 등을 분석합니다.
+-   **`ComparativeAnalysisAgent` (`agents/comparative_analysis_agent.py`)**: 다수 스타트업의 개별 분석 결과를 종합하여 항목별 비교 분석 및 요약 결과를 생성합니다.
+-   **`ReportGeneratorAgent` (`agents/report_generator_agent.py`)**: 모든 분석 결과를 바탕으로 정의된 템플릿(`prompts/ai_mini_design_20_3반_배민하_prompt.md`)에 맞춰 최종 비교 평가 보고서를 생성합니다.
+
+## State (`states/ai_mini_design_20_3반_배민하_state_py.py`)
+
+-   **`startup_names_to_compare`** (`List[str]`): 사용자가 입력한 비교 분석 대상 스타트업 이름 목록.
+-   **`user_defined_criteria_weights`** (`Optional[Dict[str, float]]`): (선택적) 사용자가 정의한 평가 기준별 가중치.
+-   **`initial_scraped_data_all_startups`** (`List[Dict[str, Any]]`): `InfoScraperAgent`가 각 스타트업별로 수집한 원시 정보 (출처 URL, 스니펫 등).
+-   **`individual_detailed_analyses`** (`List[SingleStartupDetailedAnalysis]`): 각 전문 분석 에이전트가 개별 스타트업에 대해 수행한 상세 분석 결과 (기술, 시장, 팀, 사업모델 평가, SWOT, 가중 점수 등 포함) 리스트.
+-   **`comparative_analysis_output`** (`Dict[str, Any]`): `ComparativeAnalysisAgent`가 생성한 스타트업 간 비교 분석 결과 (종합 요약, 항목별 비교 데이터, 투자 제언 등).
+-   **`final_comparison_report_text`** (`str`): `ReportGeneratorAgent`가 생성한 최종 보고서의 Markdown 텍스트.
+-   **`current_startup_index`** (`Optional[int]`): 현재 처리 중인 스타트업의 인덱스 (개별 분석 루프 관리용).
+-   **`current_startup_name`** (`Optional[str]`): 현재 처리 중인 스타트업의 이름.
+-   **`error_log`** (`List[str]`): 워크플로우 실행 중 발생한 오류 기록.
+
+## Architecture
+
+(시스템 아키텍처 다이어그램은 `1일차/ai_mini_design_20_3반_배민하_graph.png` 이미지 파일 또는 `1일차/ai_mini_design_20_3반_배민하_graph.gv` DOT 코드를 통해 확인할 수 있습니다. LangGraph의 `app.get_graph().print_ascii()`를 통해서도 텍스트 기반 시각화가 가능합니다.)
+
+## Directory Structure
+AI-Service-Mini-Project/
+├── 1일차/                     # 초기 설계 산출물
+│   ├── ai_mini_design_20_3반_배민하_graph.gv
+│   ├── ai_mini_design_20_3반_배민하_prompt.md
+│   ├── ai_mini_design_20_3반_배민하_state_py.py
+│   └── ai_mini_design_20_3반_배민하_template.md
+├── 2일차/
+│   ├── agents/               # 평가 기준별 Agent 모듈
+│   ├── data/                 # RAG용 PDF 문서 (Startup Info)
+│   ├── outputs/              # 최종 평가 보고서 저장
+│   ├── prompts/              # ReportGeneratorAgent용 프롬프트 템플릿
+│   ├── states/               # LangGraph 상태 정의
+│   ├── tools/                # 웹 검색, RAG 도구 모듈
+│   ├── main.py               # 메인 실행 스크립트 (LangGraph 워크플로우 정의)
+│   └── requirements.txt      # Python 패키지 의존성
+├── README.md                 # 프로젝트 안내 문서 (본 파일)
+└── ai_mini_3반_배민하_보고서(pdf).pdf # 프로젝트 최종 보고서 (PDF 버전)
+
