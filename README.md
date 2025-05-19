@@ -80,11 +80,12 @@
 ## Directory Structure
 AI-Service-Mini-Project/
 ├── 1일차/                     # 초기 설계 산출물
-│   ├── ai_mini_design_20_3반_배민하_graph.gv
-│   ├── ai_mini_design_20_3반_배민하_prompt.md
-│   ├── ai_mini_design_20_3반_배민하_state_py.py
-│   └── ai_mini_design_20_3반_배민하_template.md
-├── 2일차/
+│   ├── ai_mini_design_20_3반_배민하_graph.gv      # 워크플로우 그래프 정의
+│   ├── ai_mini_design_20_3반_배민하_prompt.md     # 프롬프트 설계 문서
+│   ├── ai_mini_design_20_3반_배민하_state_py.py   # 상태 정의 파일
+│   └── ai_mini_design_20_3반_배민하_template.md   # 템플릿 문서
+│
+├── 2일차/                     # 구현 단계 산출물
 │   ├── agents/               # 평가 기준별 Agent 모듈
 │   ├── data/                 # RAG용 PDF 문서 (Startup Info)
 │   ├── outputs/              # 최종 평가 보고서 저장
@@ -93,6 +94,7 @@ AI-Service-Mini-Project/
 │   ├── tools/                # 웹 검색, RAG 도구 모듈
 │   ├── main.py               # 메인 실행 스크립트 (LangGraph 워크플로우 정의)
 │   └── requirements.txt      # Python 패키지 의존성
+│
 ├── README.md                 # 프로젝트 안내 문서 (본 파일)
-└── ai_mini_3반_배민하_보고서(pdf).pdf # 프로젝트 최종 보고서 (PDF 버전)
+└── ai_mini_3반_배민하_보고서.pdf  # 프로젝트 최종 보고서
 
