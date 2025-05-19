@@ -1,0 +1,12 @@
+langchain
+langgraph
+langchain-openai
+openai
+langchain-community
+tavily-python
+faiss-cpu
+pypdf
+python-dotenv
+pandas 
+tiktoken
+langchainhub
