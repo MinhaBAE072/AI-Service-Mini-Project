@@ -78,23 +78,30 @@
 (시스템 아키텍처 다이어그램은 `1일차/ai_mini_design_20_3반_배민하_graph.png` 이미지 파일 또는 `1일차/ai_mini_design_20_3반_배민하_graph.gv` DOT 코드를 통해 확인할 수 있습니다.)
 
 ## Directory Structure
-AI-Service-Mini-Project/
-├── 1일차/                     # 초기 설계 산출물
-│   ├── ai_mini_design_20_3반_배민하_graph.gv      # 워크플로우 그래프 정의
-│   ├── ai_mini_design_20_3반_배민하_prompt.md     # 프롬프트 설계 문서
-│   ├── ai_mini_design_20_3반_배민하_state_py.py   # 상태 정의 파일
-│   └── ai_mini_design_20_3반_배민하_template.md   # 템플릿 문서
-│
-├── 2일차/                     # 구현 단계 산출물
-│   ├── agents/               # 평가 기준별 Agent 모듈
-│   ├── data/                 # RAG용 PDF 문서 (Startup Info)
-│   ├── outputs/              # 최종 평가 보고서 저장
-│   ├── prompts/              # ReportGeneratorAgent용 프롬프트 템플릿
-│   ├── states/               # LangGraph 상태 정의
-│   ├── tools/                # 웹 검색, RAG 도구 모듈
-│   ├── main.py               # 메인 실행 스크립트 (LangGraph 워크플로우 정의)
-│   └── requirements.txt      # Python 패키지 의존성
-│
-├── README.md                 # 프로젝트 안내 문서 (본 파일)
-└── ai_mini_3반_배민하_보고서.pdf  # 프로젝트 최종 보고서
 
+```
+AI-Service-Mini-Project/
+├── README.md
+├── requirements.txt
+├── main.py
+├── ai_mini_design_20_3반_배민하_graph.gv
+├── ai_mini_design_20_3반_배민하_template.md
+├── final_ai_startup_comparison_report.md
+├── data/
+│   └── Artificial General Intelligence, Intelligent Agents, Voice Intelligence.pdf
+├── prompts/
+│   └── ai_mini_design_20_3반_배민하_prompt.md
+├── states/
+│   └── ai_mini_design_20_3반_배민하_state_py.py
+├── tools/
+│   ├── rag_tool.py
+│   └── web_search_tool.py
+└── agents/
+    ├── biz_model_eval_agent.py
+    ├── comparative_analysis_agent.py
+    ├── info_scraper_agent.py
+    ├── market_eval_agent.py
+    ├── report_generator_agent.py
+    ├── team_eval_agent.py
+    └── tech_eval_agent.py
+```
