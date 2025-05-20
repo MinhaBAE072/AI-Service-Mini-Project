@@ -75,7 +75,7 @@
 
 ## Architecture
 
-(시스템 아키텍처 다이어그램은 `1일차/ai_mini_design_20_3반_배민하_graph.png` 이미지 파일 또는 `1일차/ai_mini_design_20_3반_배민하_graph.gv` DOT 코드를 통해 확인할 수 있습니다.)
+![workflow_manual](https://github.com/user-attachments/assets/7605b046-1976-4ede-994a-09c0f42132e6)
 
 ## Directory Structure
 
